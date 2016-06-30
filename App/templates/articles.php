@@ -17,6 +17,10 @@
 <div class="block">
     Заголовок новости: <?= $article->title ?><br>
     Текст новости: <?= $article->text ?><br>
+    <?php if(!empty($article->author)): ?>
+        Имя автора: <?= $article->author->name ?><br>
+        Фамилия автора: <?= $article->author->surname ?><br>
+    <?php endif; ?>
 </div>
 <?php endforeach; ?>
 

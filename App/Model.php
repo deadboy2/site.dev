@@ -16,7 +16,7 @@ abstract class Model
     public static function findById($id)
     {
         $db = DB::getInstance();
-        return $db->query('select * from ' . static::TABLE . ' where id=:id', [':id' => (int)$id], static::class);
+        return $db->query('select * from ' . static::TABLE . ' where id=:id', [':id' => (int)$id], static::class)[0];
     }
 
     public function isNew()
