@@ -6,7 +6,7 @@ class DB
 {
     use Singleton;
     protected $conn;
-    
+
     function __construct()
     {
         $this->conn = new \PDO('mysql:host=127.0.0.1;dbname=profit', 'root', 'root', array(\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''));
@@ -26,8 +26,8 @@ class DB
         if ($result !== null) {
             return $statement->fetchAll(\PDO::FETCH_CLASS, $class);
         }
-        
+
         return[];
     }
-    
+
 }
