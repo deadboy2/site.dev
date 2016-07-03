@@ -10,7 +10,7 @@ class Article
 
     protected function actionArticles()
     {
-        $this->view->articles = \App\Models\Article::findAll();
+        $this->view->articles = \App\Models\Article::findAllOnUpper();
         $this->view->display(__DIR__ . '/../templates/articles.php');
     }
 
@@ -18,13 +18,8 @@ class Article
     {
 
         $id = (int)$_GET['id'];
-        $res = $this->view->article = \App\Models\Article::findById($id);
+        $this->view->article = \App\Models\Article::findById($id);
         $this->view->display(__DIR__ . '/../templates/article.php');
 
-    }
-
-    protected function actionIndex()
-    {
-        $this->view->display(__DIR__ . '/../templates/index.php');
     }
 }

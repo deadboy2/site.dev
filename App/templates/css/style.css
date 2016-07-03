@@ -1,0 +1,12 @@
+div.block-right {
+    border: 1px gray solid;
+}
+
+.title-news {
+    font-size: 20px;
+    color: gray;
+}
+
+.text-white {
+    color: white !important;
+}

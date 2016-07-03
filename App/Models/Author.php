@@ -9,5 +9,4 @@ class Author extends Model
     const TABLE = 'authors';
     
     public $name;
-    public $surname;
 }

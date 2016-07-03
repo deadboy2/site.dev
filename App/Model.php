@@ -15,6 +15,12 @@ abstract class Model
         return $db->query('select * from ' . static::TABLE, [], static::class);
     }
 
+    public static function findAllOnUpper()
+    {
+        $db = DB::getInstance();
+        return $db->query('select * from ' . static::TABLE . ' order by id desc', [], static::class);
+    }
+
     public static function findById($id)
     {
         $db = DB::getInstance();
@@ -24,7 +30,7 @@ abstract class Model
         }
         throw new Database('Undefined index');
     }
-
+    
     public function isNew()
     {
         return empty($this->id);

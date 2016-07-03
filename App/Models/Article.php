@@ -12,6 +12,7 @@ class Article extends Model
     public $title;
     public $text;
     public $author_id;
+    public $date;
     
     public function __get($name)
     {
