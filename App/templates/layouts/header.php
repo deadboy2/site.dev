@@ -7,7 +7,7 @@ echo '<nav class="navbar navbar-inverse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button >
-      <a class="navbar-brand" href = "#">VkTarget.pro</a>
+      <a class="navbar-brand" href = "">VkTarget.pro</a>
     </div>
     <div class="collapse navbar-collapse" id = "myNavbar">
       <ul class="nav navbar-nav">
@@ -22,7 +22,8 @@ echo '<nav class="navbar navbar-inverse">
 if (isset($_SESSION['auth'])) {
     $name = $_SESSION['name'];
     $surname = $_SESSION['surname'];
-    echo ' <li class="dropdown">
+    $photo = $_SESSION['photo'];
+    echo '<img src="'.$photo.'" class="img-circle" alt="photo"><li class="dropdown">
   <a href="" class="dropdown-toggle" data-toggle="dropdown">'.$name.' '.$surname.'
   <span class="caret"></span></a>
   <ul class="dropdown-menu">
@@ -34,7 +35,7 @@ if (isset($_SESSION['auth'])) {
   </ul>
 </li>';
 } else {
-    echo '<li class="right-vk"><a href="#"><div id="uLogin" data-ulogin="display=small;fields=first_name,last_name;providers=vkontakte;redirect_uri=http%3A%2F%2Fsite.dev/profile"></div></a></li>';
+    echo '<li class="right-vk"><a href="#"><div id="uLogin" data-ulogin="display=small;fields=first_name,last_name,photo;providers=vkontakte;redirect_uri=http%3A%2F%2Fsite.dev/profile"></div></a></li>';
 }
 echo '</ul>
     </div>
