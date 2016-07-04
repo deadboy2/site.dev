@@ -9,4 +9,5 @@ class Person extends Model
     const TABLE = 'persons';
     
     public $uid;
+    public $is_paid;
 }

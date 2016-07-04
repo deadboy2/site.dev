@@ -16,6 +16,7 @@ class Cabinet
         if (empty($idd)) {
             $person = new Person();
             $person->uid = $uid;
+            $person->is_paid = false;
             $person->save();
         }
 
@@ -33,8 +34,6 @@ class Cabinet
                     }
                 }
             }
-
-            var_dump($allFriends);
 
             $_SESSION['friends'] = $this->view->friends;
             $this->view->display(__DIR__ . '/../templates/cabinet.php');
