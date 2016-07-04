@@ -35,7 +35,7 @@ if (isset($_SESSION['auth'])) {
   </ul>
 </li>';
 } else {
-    echo '<li class="right-vk"><a href="#"><div id="uLogin" data-ulogin="display=small;fields=first_name,last_name,photo;providers=vkontakte;redirect_uri=http%3A%2F%2Fsite.dev/profile"></div></a></li>';
+    echo '<li class="right-vk"><a href="#"><div id="uLogin" data-ulogin="display=small;fields=first_name,last_name,photo,uid;providers=vkontakte;redirect_uri=http%3A%2F%2Fsite.dev/profile"></div></a></li>';
 }
 echo '</ul>
     </div>
