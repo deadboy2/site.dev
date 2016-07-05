@@ -20,7 +20,7 @@ abstract class Model
         $db = DB::getInstance();
         return $db->query('select uid from ' . static::TABLE, [], static::class);
     }
-
+    
     public static function findAllOnUpper()
     {
         $db = DB::getInstance();

@@ -24,9 +24,11 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 main-block">
-            <div>
-                
+            <?php foreach ($avatars as $avatar): ?>
+            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+                <img src="<?=$avatar?>" alt="avatar">
             </div>
+            <?php endforeach; ?>
         </div>
         <?php include __DIR__ . '/layouts/right-bar.php'?>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 two">
