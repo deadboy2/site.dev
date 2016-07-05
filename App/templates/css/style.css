@@ -1,5 +1,10 @@
 div.block-right {
-    border: 1px gray solid;
+    box-shadow: 1px 1px 10px 2px gray;
+}
+
+div.main-block {
+    box-shadow: 1px 1px 10px 2px gray;
+    height: 200px;
 }
 
 .title-news {

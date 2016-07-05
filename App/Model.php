@@ -15,6 +15,12 @@ abstract class Model
         return $db->query('select * from ' . static::TABLE, [], static::class);
     }
 
+    public static function findAllUid()
+    {
+        $db = DB::getInstance();
+        return $db->query('select uid from ' . static::TABLE, [], static::class);
+    }
+
     public static function findAllOnUpper()
     {
         $db = DB::getInstance();

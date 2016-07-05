@@ -23,7 +23,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-12 col-sm-9 col-md-8 col-lg-9">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
             <?php foreach($articles as $article): ?>
                 <div class="panel panel-default">
                     <div class="panel-heading"><span class="label label-info">Дата публикации:</span><span class="date"> <?= $article->date ?></span></div>

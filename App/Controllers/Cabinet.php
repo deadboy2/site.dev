@@ -13,6 +13,8 @@ class Cabinet
     {
         $uid = $_SESSION['auth'];
         $idd = Person::findByUid($uid);
+
+
         if (empty($idd)) {
             $person = new Person();
             $person->uid = $uid;
@@ -34,6 +36,36 @@ class Cabinet
                     }
                 }
             }
+
+            $arrP = Person::findAllUid();
+            $findPersons = [];
+            $notFindPersons = [];
+
+            foreach ($arrP as $person) {
+                foreach ($person as $item) {
+                    if (in_array($item, $allFriends)) {
+                        $findPersons[] = $item;
+                        break;
+                    } else {
+                        if ($uid == $item) {
+                            break;
+                        }
+                        $notFindPersons[] = $item;
+                        break;
+                    }
+                }
+            }
+
+            shuffle($notFindPersons);
+
+            $fivePersons = array_slice($notFindPersons, 0, 5);
+            
+
+            for ($i = 0;$i<count($fivePersons);$i++) {
+                $_SESSION[$i.'friend'] = $fivePersons[$i];
+            }
+
+
 
             $_SESSION['friends'] = $this->view->friends;
             $this->view->display(__DIR__ . '/../templates/cabinet.php');
