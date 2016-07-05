@@ -11,4 +11,5 @@ class Person extends Model
     public $uid;
     public $is_paid;
     public $is_add;
+    public $sponsor_uid;
 }

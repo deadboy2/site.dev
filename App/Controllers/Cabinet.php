@@ -26,6 +26,9 @@ class Cabinet
 
         if (empty($idd)) {
             $person = new Person();
+            if (isset($_SESSION['refer'])) {
+                $person->sponsor_uid = $_SESSION['refer'];
+            }
             $person->uid = $uid;
             $person->is_paid = false;
             $person->is_add = false;
@@ -33,7 +36,8 @@ class Cabinet
         }
 
         /**
-         * Если пользователь авторизован задаем логику
+         * Если пользователь авторизован и еще не добавлял 5-ти требуемых пользователей
+         * задаем логику
          */
 
         if (!$isAdd) {
@@ -63,25 +67,37 @@ class Cabinet
                  * и проверяем есть ли эти пользователи в друзьях 
                  * у данного пользователя и отсортировываем их по 2-м 
                  * разным массивам те которые есть в друзьях и тех которых нету
+                 *
+                 * Тут же проверяем и отсеиваем пользователей
+                 * удаливших страничку или забаненых
                  */
 
                 $arrP = Person::findAllUid();
                 $findPersons = [];
                 $notFindPersons = [];
+                $arrBan = [];
 
                 foreach ($arrP as $person) {
-                    foreach ($person as $item) {
-                        if (in_array($item, $allFriends)) {
-                            $findPersons[] = $item;
-                            break;
-                        } else {
-                            if ($uid == $item) {
-                                break;
-                            }
-                            $notFindPersons[] = $item;
-                            break;
-                        }
+                    $fr = $person->uid;
+                    if ($uid == $fr) {
+                        continue;
                     }
+                    if (in_array($fr, $allFriends)) {
+                        $findPersons[] = $fr;
+                    } else {
+                        $deactiv = file_get_contents('https://api.vk.com/method/users.get?user_id='.$fr.'&v=5.52');
+                        $arrBan = json_decode($deactiv, true);
+
+                        foreach ($arrBan as $item) {
+                            foreach ($item as $value) {
+                                if (!isset($value["deactivated"])) {
+                                    $notFindPersons[] = $fr;
+                                }
+                            }
+                        }
+                        
+                    }
+
                 }
 
                 /**
@@ -118,13 +134,16 @@ class Cabinet
                  */
 
                 $arrImg = [];
-
+                
                 foreach ($imgs as $item) {
                     foreach ($item as $value) {
-                        $arrImg[] = array_pop($value);
+                        if (isset($value["deactivated"])) {
+
+                        }
+                        $arrImg[] = $value["photo_100"];
                     }
                 }
-
+                
                 /**
                  * Подготавливаем массив изображений к 
                  * дальнейшей их отрисовке

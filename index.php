@@ -10,17 +10,21 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 }
 
-if (isset($_GET['exit'])) {
-    unset($_SESSION['auth']);
-    header('Location: http://site.dev');
+if (isset($_GET['ref'])) {
+    $id = $_GET['ref'];
 }
 
+if (isset($_GET['exit'])) {
+    session_destroy();
+    header('Location: http://site.dev');
+}
 
 $articlesController = new \App\Controllers\Article();
 $contactsController = new \App\Controllers\Contacts();
 $mainController = new \App\Controllers\Main();
 $headerController = new \App\Controllers\Header();
 $profileController = new \App\Controllers\Cabinet();
+$personController = new \App\Controllers\Person();
 //$errorsController = new \App\Controllers\Error();
 
 switch ($url) {
@@ -48,6 +52,11 @@ switch ($url) {
         $headerController->action('Index');
         $action = 'Index';
         $profileController->action($action);
+        break;
+    case '/?ref=' . $id:
+        $headerController->action('Index');
+        $action = 'Person';
+        $personController->action($action);
         break;
     default:
         $headerController->action('Index');
