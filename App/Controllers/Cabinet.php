@@ -16,150 +16,158 @@ class Cabinet
          * если нет то добавляем его в бд
          */
 
-        $uid = $_SESSION['auth'];
-        $idd = Person::findByUid($uid);
-        $isAdd = '';
+        if (isset($_SESSION['auth'])) {
 
-        foreach ($idd as $item) {
-            $isAdd = $item->is_add;
-        }
+            $uid = $_SESSION['auth'];
+            $idd = Person::findByUid($uid);
+            $isAdd = '';
 
-        if (empty($idd)) {
-            $person = new Person();
-            if (isset($_SESSION['refer'])) {
-                $person->sponsor_uid = $_SESSION['refer'];
+            foreach ($idd as $item) {
+                $isAdd = $item->is_add;
             }
-            $person->uid = $uid;
-            $person->is_paid = false;
-            $person->is_add = false;
-            $person->save();
-        }
 
-        /**
-         * Если пользователь авторизован и еще не добавлял 5-ти требуемых пользователей
-         * задаем логику
-         */
+            if (empty($idd)) {
+                $person = new Person();
+                if (isset($_SESSION['refer'])) {
+                    $person->sponsor_uid = $_SESSION['refer'];
+                }
+                $person->uid = $uid;
+                $person->is_paid = false;
+                $person->is_add = false;
+                $person->save();
+            }
 
-        if (!$isAdd) {
-            if (isset($_SESSION['auth'])) {
+            /**
+             * Если пользователь авторизован и еще не добавлял 5-ти требуемых пользователей
+             * задаем логику
+             */
 
-                /**
-                 * Запрашиваем всех друзей из вк у данного пользователя
-                 * и заносим их uid в масив
-                 */
-                
-                $s = file_get_contents('https://api.vk.com/method/friends.get?user_id='.$_SESSION['auth'].'&v=5.52');
-                $this->view->friends = json_decode($s, true);
+            if (!$isAdd) {
+                if (isset($_SESSION['auth'])) {
 
-                $all = $this->view->friends;
-                $allFriends = [];
+                    /**
+                     * Запрашиваем всех друзей из вк у данного пользователя
+                     * и заносим их uid в масив
+                     */
 
-                foreach ($all as $k) {
-                    foreach ($k as $item) {
-                        foreach ($item as $value) {
-                            $allFriends[] = $value;
+                    $s = file_get_contents('https://api.vk.com/method/friends.get?user_id=' . $_SESSION['auth'] . '&v=5.52');
+                    $this->view->friends = json_decode($s, true);
+
+                    $all = $this->view->friends;
+                    $allFriends = [];
+
+                    foreach ($all as $k) {
+                        foreach ($k as $item) {
+                            foreach ($item as $value) {
+                                $allFriends[] = $value;
+                            }
                         }
                     }
-                }
 
-                /**
-                 * Достаем из бд uid-ы всех зареганых пользователей
-                 * и проверяем есть ли эти пользователи в друзьях 
-                 * у данного пользователя и отсортировываем их по 2-м 
-                 * разным массивам те которые есть в друзьях и тех которых нету
-                 *
-                 * Тут же проверяем и отсеиваем пользователей
-                 * удаливших страничку или забаненых
-                 */
+                    /**
+                     * Достаем из бд uid-ы всех зареганых пользователей
+                     * и проверяем есть ли эти пользователи в друзьях
+                     * у данного пользователя и отсортировываем их по 2-м
+                     * разным массивам те которые есть в друзьях и тех которых нету
+                     *
+                     * Тут же проверяем и отсеиваем пользователей
+                     * удаливших страничку или забаненых
+                     */
 
-                $arrP = Person::findAllUid();
-                $findPersons = [];
-                $notFindPersons = [];
-                $arrBan = [];
+                    $arrP = Person::findAllUid();
+                    $findPersons = [];
+                    $notFindPersons = [];
+                    $arrBan = [];
 
-                foreach ($arrP as $person) {
-                    $fr = $person->uid;
-                    if ($uid == $fr) {
-                        continue;
+                    foreach ($arrP as $person) {
+                        $fr = $person->uid;
+                        if ($uid == $fr) {
+                            continue;
+                        }
+                        if (in_array($fr, $allFriends)) {
+                            $findPersons[] = $fr;
+                        } else {
+                            $notFindPersons[] = $fr;
+                        }
                     }
-                    if (in_array($fr, $allFriends)) {
-                        $findPersons[] = $fr;
-                    } else {
-                        $deactiv = file_get_contents('https://api.vk.com/method/users.get?user_id='.$fr.'&v=5.52');
+
+                    shuffle($notFindPersons);
+
+                    $i = 0;
+                    $user = '';
+                    $notBannedPersons = [];
+
+                    while ($i < 5) {
+
+                        foreach ($notFindPersons as $person) {
+                            $user = $person;
+                            var_dump($person);
+                            break;
+                        }
+
+                        $deactiv = file_get_contents('https://api.vk.com/method/users.get?user_id=' . $user . '&v=5.52');
                         $arrBan = json_decode($deactiv, true);
 
                         foreach ($arrBan as $item) {
                             foreach ($item as $value) {
                                 if (!isset($value["deactivated"])) {
-                                    $notFindPersons[] = $fr;
+                                    $i++;
+                                    $notBannedPersons[] = $value;
                                 }
                             }
                         }
-                        
                     }
 
-                }
+                    var_dump($notBannedPersons);
 
-                /**
-                 * Перемешиваем массив пользователей 
-                 * которых нет в друзьях у данного пользователя
-                 */
+                    /**
+                     * Заносим их в 5 разных сессий
+                     */
 
-                shuffle($notFindPersons);
+                    for ($i = 0; $i < count($notBannedPersons); $i++) {
+                        $_SESSION[$i . 'friend'] = $notBannedPersons[$i];
+                    }
 
-                /**
-                 * И обрезаем массив до 5 рандомных пользователей
-                 */
+                    /**
+                     * Запрашиваем с вк ихние аватарки
+                     */
 
-                $fivePersons = array_slice($notFindPersons, 0, 5);
+                    $p = file_get_contents('https://api.vk.com/method/users.get?user_ids=' . $_SESSION['0friend'] . ',' . $_SESSION['1friend'] . ',' . $_SESSION['2friend'] . ',' . $_SESSION['3friend'] . ',' . $_SESSION['4friend'] . '&fields=photo_100' . '&v=5.52');
+                    $imgs = json_decode($p, true);
 
-                /**
-                 * Заносим их в 5 разных сессий
-                 */
+                    /**
+                     * Вытаскиваем их из массива и помещаем в
+                     * новый массив изображений
+                     */
 
-                for ($i = 0;$i<count($fivePersons);$i++) {
-                    $_SESSION[$i.'friend'] = $fivePersons[$i];
-                }
+                    $arrImg = [];
 
-                /**
-                 * Запрашиваем с вк ихние аватарки
-                 */
+                    foreach ($imgs as $item) {
+                        foreach ($item as $value) {
+                            if (isset($value["deactivated"])) {
 
-                $p = file_get_contents('https://api.vk.com/method/users.get?user_ids='.$_SESSION['0friend'].','.$_SESSION['1friend'].','.$_SESSION['2friend'].','.$_SESSION['3friend'].','.$_SESSION['4friend'].'&fields=photo_100'.'&v=5.52');
-                $imgs = json_decode($p, true);
-
-                /**
-                 * Вытаскиваем их из массива и помещаем в 
-                 * новый массив изображений
-                 */
-
-                $arrImg = [];
-                
-                foreach ($imgs as $item) {
-                    foreach ($item as $value) {
-                        if (isset($value["deactivated"])) {
-
+                            }
+                            $arrImg[] = $value["photo_100"];
                         }
-                        $arrImg[] = $value["photo_100"];
                     }
+
+                    /**
+                     * Подготавливаем массив изображений к
+                     * дальнейшей их отрисовке
+                     */
+
+                    $this->view->avatars = $arrImg;
+
+                    /**
+                     * это пока не трогаем
+                     * это хз чо
+                     */
+
+//                $_SESSION['friends'] = $this->view->friends;
                 }
-                
-                /**
-                 * Подготавливаем массив изображений к 
-                 * дальнейшей их отрисовке
-                 */
 
-                $this->view->avatars = $arrImg;
-
-                /**
-                 * это пока не трогаем 
-                 * это хз чо
-                 */
-
-                $_SESSION['friends'] = $this->view->friends;
-        }
-
-            $this->view->display(__DIR__ . '/../templates/cabinet.php');
+                $this->view->display(__DIR__ . '/../templates/cabinet.php');
+            }
         } else {
             header('Location: http://site.dev');
         }
