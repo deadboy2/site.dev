@@ -27,6 +27,8 @@
             <?php foreach ($avatars as $avatar): ?>
             <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
                 <img src="<?=$avatar?>" alt="avatar">
+                <?php $id = array_shift($ids); ?>
+                <a href="https://vk.com/id<?=$id?>" target="_blank">Добавить пользователя</a>
             </div>
             <?php endforeach; ?>
         </div>

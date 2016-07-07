@@ -51,12 +51,11 @@ class Cabinet
                      */
 
                     $s = file_get_contents('https://api.vk.com/method/friends.get?user_id=' . $_SESSION['auth'] . '&v=5.52');
-                    $this->view->friends = json_decode($s, true);
+                    $fri = json_decode($s, true);
 
-                    $all = $this->view->friends;
                     $allFriends = [];
 
-                    foreach ($all as $k) {
+                    foreach ($fri as $k) {
                         foreach ($k as $item) {
                             foreach ($item as $value) {
                                 $allFriends[] = $value;
@@ -80,18 +79,19 @@ class Cabinet
                     $arrBan = [];
 
                     foreach ($arrP as $person) {
-                        $fr = $person->uid;
-                        if ($uid == $fr) {
-                            continue;
-                        }
-                        if (in_array($fr, $allFriends)) {
-                            $findPersons[] = $fr;
-                        } else {
-                            $notFindPersons[] = $fr;
+                        foreach ($person as $item) {
+                            if (in_array($item, $allFriends)) {
+                                $findPersons[] = $item;
+                                break;
+                            } else {
+                                if ($uid == $item) {
+                                    break;
+                                }
+                                $notFindPersons[] = $item;
+                                break;
+                            }
                         }
                     }
-
-                    shuffle($notFindPersons);
 
                     $i = 0;
                     $user = '';
@@ -99,41 +99,101 @@ class Cabinet
 
                     while ($i < 5) {
 
-                        foreach ($notFindPersons as $person) {
-                            $user = $person;
-                            var_dump($person);
-                            break;
-                        }
+                        $user = array_shift($notFindPersons);
 
                         $deactiv = file_get_contents('https://api.vk.com/method/users.get?user_id=' . $user . '&v=5.52');
                         $arrBan = json_decode($deactiv, true);
 
                         foreach ($arrBan as $item) {
-                            foreach ($item as $value) {
-                                if (!isset($value["deactivated"])) {
-                                    $i++;
-                                    $notBannedPersons[] = $value;
-                                }
+                            if (!isset($item["deactivated"])) {
+                                $i++;
+                                $notBannedPersons[] = $item;
                             }
                         }
                     }
+                    
+                    $arr = [];
 
-                    var_dump($notBannedPersons);
-
-                    /**
-                     * Заносим их в 5 разных сессий
-                     */
-
-                    for ($i = 0; $i < count($notBannedPersons); $i++) {
-                        $_SESSION[$i . 'friend'] = $notBannedPersons[$i];
+                    if (isset($_SESSION["one"])) {
+                        unset($notBannedPersons[0]);
                     }
+                    if (isset($_SESSION["two"])) {
+                        unset($notBannedPersons[1]);
+                    }
+                    if (isset($_SESSION["three"])) {
+                        unset($notBannedPersons[2]);
+                    }
+                    if (isset($_SESSION["four"])) {
+                        unset($notBannedPersons[3]);
+                    }
+                    if (isset($_SESSION["five"])) {
+                        unset($notBannedPersons[4]);
+                    }
+
+                    foreach ($notBannedPersons as $person) {
+                        $arr[] = $person[0]["id"];
+                    }
+
+                    for($i=0;$i<count($notBannedPersons);$i++) {
+                        $_SESSION[$i.'person'] = $notBannedPersons[$i];
+                    }
+
+                    $imp = implode(',', $arr);
 
                     /**
                      * Запрашиваем с вк ихние аватарки
                      */
 
-                    $p = file_get_contents('https://api.vk.com/method/users.get?user_ids=' . $_SESSION['0friend'] . ',' . $_SESSION['1friend'] . ',' . $_SESSION['2friend'] . ',' . $_SESSION['3friend'] . ',' . $_SESSION['4friend'] . '&fields=photo_100' . '&v=5.52');
+                    $p = file_get_contents('https://api.vk.com/method/users.get?user_ids='.$imp.'&fields=photo_100,is_friend' . '&v=5.52');
                     $imgs = json_decode($p, true);
+
+                    if (isset($_SESSION["0person"])) {
+                        $one = file_get_contents('https://api.vk.com/method/users.getFollowers?user_id='.$_SESSION["0person"][0]["id"].'&v=5.52');
+                        $oneRes = json_decode($one, true);
+                        $followers1 = $oneRes["response"]["items"];
+                        if (in_array($uid, $followers1)) {
+                            echo "подписан!";
+                            $_SESSION["one"] = 1;
+                        }
+                    }
+                    if (isset($_SESSION["1person"])) {
+                        $two = file_get_contents('https://api.vk.com/method/users.getFollowers?user_id='.$_SESSION["1person"][0]["id"].'&v=5.52');
+                        $twoRes = json_decode($two, true);
+                        $followers2 = $twoRes["response"]["items"];
+                        if (in_array($uid, $followers2)) {
+                            echo "подписан!";
+                            $_SESSION["two"] = 2;
+                        }
+                    }
+                    if (isset($_SESSION["2person"])) {
+                        $three = file_get_contents('https://api.vk.com/method/users.getFollowers?user_id='.$_SESSION["2person"][0]["id"].'&v=5.52');
+                        $threeRes = json_decode($three, true);
+                        $followers3 = $threeRes["response"]["items"];
+                        if (in_array($uid, $followers3)) {
+                            echo "подписан!";
+                            $_SESSION["three"] = 3;
+                        }
+                    }
+                    if (isset($_SESSION["3person"])) {
+                        $four = file_get_contents('https://api.vk.com/method/users.getFollowers?user_id='.$_SESSION["3person"][0]["id"].'&v=5.52');
+                        $fourRes = json_decode($four, true);
+                        $followers4 = $fourRes["response"]["items"];
+                        if (in_array($uid, $followers4)) {
+                            echo "подписан!";
+                            $_SESSION["four"] = 4;
+                        }
+                    }
+                    if (isset($_SESSION["4person"])) {
+                        $five = file_get_contents('https://api.vk.com/method/users.getFollowers?user_id='.$_SESSION["4person"][0]["id"].'&v=5.52');
+                        $fiveRes = json_decode($five, true);
+                        $followers5 = $fiveRes["response"]["items"];
+                        if (in_array($uid, $followers5)) {
+                            echo "подписан!";
+                            $_SESSION["five"] = 5;
+                        }
+                    }
+
+
 
                     /**
                      * Вытаскиваем их из массива и помещаем в
@@ -144,12 +204,17 @@ class Cabinet
 
                     foreach ($imgs as $item) {
                         foreach ($item as $value) {
-                            if (isset($value["deactivated"])) {
-
-                            }
                             $arrImg[] = $value["photo_100"];
                         }
                     }
+
+                    var_dump($arr);
+
+                    /**
+                     * Проверка на добавления
+                     */
+
+
 
                     /**
                      * Подготавливаем массив изображений к
@@ -157,6 +222,7 @@ class Cabinet
                      */
 
                     $this->view->avatars = $arrImg;
+                    $this->view->ids = $arr;
 
                     /**
                      * это пока не трогаем

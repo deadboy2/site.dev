@@ -15,7 +15,7 @@ if (isset($_GET['ref'])) {
 }
 
 if (isset($_GET['exit'])) {
-    session_destroy();
+    unset($_SESSION["auth"]);
     header('Location: http://site.dev');
 }
 
