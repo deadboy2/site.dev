@@ -8,6 +8,7 @@ abstract class Model
 {
     const TABLE = '';
     public $id;
+    public $uid;
 
     public static function findAll()
     {
@@ -52,6 +53,11 @@ abstract class Model
         return empty($this->id);
     }
 
+    public function isNewUid()
+    {
+        return empty($this->uid);
+    }
+
     public function insert()
     {
         if (!$this->isNew()) {
@@ -93,6 +99,29 @@ abstract class Model
         }
 
         $sql = 'update ' . static::TABLE . ' set ' . implode(',', $columns) . ' where id=' . (int)$id;
+        $db = DB::getInstance();
+        $db->execute($sql, $values);
+    }
+
+    public function updatePerson()
+    {
+        if ($this->isNewUid()) {
+            return;
+        }
+
+        $columns = [];
+        $values = [];
+        $id = '';
+
+        foreach ($this as $k => $v) {
+            if ('uid' == $k) {
+                $id = $v;
+            }
+            $columns[] = $k . '=:' . $k;
+            $values[':' . $k] = $v;
+        }
+
+        $sql = 'update ' . static::TABLE . ' set ' . implode(',', $columns) . ' where uid=' . (int)$id;
         $db = DB::getInstance();
         $db->execute($sql, $values);
     }
