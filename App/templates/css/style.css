@@ -2,6 +2,10 @@ div.block-right {
     box-shadow: 1px 1px 10px 2px gray;
 }
 
+.init {
+    border: 1px gray solid;
+}
+
 div.main-block {
     box-shadow: 1px 1px 10px 2px gray;
 }

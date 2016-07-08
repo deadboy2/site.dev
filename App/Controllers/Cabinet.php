@@ -11,6 +11,7 @@ class Cabinet
 
     protected function actionIndex()
     {
+
         /**
          * Проверям существует ли данный пользователь в бд,
          * если нет то добавляем его в бд
@@ -112,25 +113,11 @@ class Cabinet
                 }
 
                 $arr = [];
-
-                if (isset($_SESSION["one"])) {
-                    unset($notBannedPersons[0]);
-                }
-                if (isset($_SESSION["two"])) {
-                    unset($notBannedPersons[1]);
-                }
-                if (isset($_SESSION["three"])) {
-                    unset($notBannedPersons[2]);
-                }
-                if (isset($_SESSION["four"])) {
-                    unset($notBannedPersons[3]);
-                }
-                if (isset($_SESSION["five"])) {
-                    unset($notBannedPersons[4]);
-                }
-
+                $arrInitials = [];
+                
                 foreach ($notBannedPersons as $person) {
                     $arr[] = $person[0]["id"];
+                    $arrInitials[] = $person[0]["first_name"] . " " . $person[0]["last_name"];
                 }
 
                 for($i=0;$i<count($notBannedPersons);$i++) {
@@ -152,6 +139,8 @@ class Cabinet
                     $followers1 = $oneRes["response"]["items"];
                     if (in_array($uid, $followers1)) {
                         $_SESSION["one"] = 1;
+                    } else {
+                        unset($_SESSION["one"]);
                     }
                 }
                 if (isset($_SESSION["1person"])) {
@@ -160,6 +149,8 @@ class Cabinet
                     $followers2 = $twoRes["response"]["items"];
                     if (in_array($uid, $followers2)) {
                         $_SESSION["two"] = 2;
+                    } else {
+                        unset($_SESSION["two"]);
                     }
                 }
                 if (isset($_SESSION["2person"])) {
@@ -168,6 +159,8 @@ class Cabinet
                     $followers3 = $threeRes["response"]["items"];
                     if (in_array($uid, $followers3)) {
                         $_SESSION["three"] = 3;
+                    } else {
+                        unset($_SESSION["three"]);
                     }
                 }
                 if (isset($_SESSION["3person"])) {
@@ -176,6 +169,8 @@ class Cabinet
                     $followers4 = $fourRes["response"]["items"];
                     if (in_array($uid, $followers4)) {
                         $_SESSION["four"] = 4;
+                    } else {
+                        unset($_SESSION["four"]);
                     }
                 }
                 if (isset($_SESSION["4person"])) {
@@ -184,6 +179,8 @@ class Cabinet
                     $followers5 = $fiveRes["response"]["items"];
                     if (in_array($uid, $followers5)) {
                         $_SESSION["five"] = 5;
+                    } else {
+                        unset($_SESSION["five"]);
                     }
                 }
 
@@ -212,22 +209,30 @@ class Cabinet
 
                 $this->view->avatars = $arrImg;
                 $this->view->ids = $arr;
+                $this->view->ini = $arrInitials;
 
                 /**
                  *
                  */
 
-                if (isset($_SESSION["one"],$_SESSION["two"], $_SESSION["three"], $_SESSION["four"], $_SESSION["five"])) {
-                    $person = new Person();
-                    $person->uid = $uid;
-                    $person->is_paid = false;
-                    $person->is_add = true;
-                    $person->updatePerson();
+                
+
+                if (isset($_POST["isSelect"])) {
+                    if (isset($_SESSION["one"],$_SESSION["two"], $_SESSION["three"], $_SESSION["four"], $_SESSION["five"])) {
+                        $person = new Person();
+                        $person->uid = $uid;
+                        $person->is_paid = false;
+                        $person->is_add = true;
+                        $person->updatePerson();
+                        header('Location: http://site.dev/payment');
+                    } else {
+                        $this->view->error = 'Пожалуйста добавьте всех пользователей';
+                    }
                 }
 
                 $this->view->display(__DIR__ . '/../templates/cabinet.php');
             } else {
-                header('Location: http://site.dev');
+                header('Location: http://site.dev/payment');
             }
         } else {
             header('Location: http://site.dev');

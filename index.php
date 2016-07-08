@@ -25,6 +25,7 @@ $mainController = new \App\Controllers\Main();
 $headerController = new \App\Controllers\Header();
 $profileController = new \App\Controllers\Cabinet();
 $personController = new \App\Controllers\Person();
+$paymentController = new \App\Controllers\Payment();
 //$errorsController = new \App\Controllers\Error();
 
 switch ($url) {
@@ -57,6 +58,11 @@ switch ($url) {
         $headerController->action('Index');
         $action = 'Person';
         $personController->action($action);
+        break;
+    case '/payment':
+        $headerController->action('Index');
+        $action = 'Index';
+        $paymentController->action($action);
         break;
     default:
         $headerController->action('Index');

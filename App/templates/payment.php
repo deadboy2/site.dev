@@ -23,28 +23,8 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 main-block">
-                <?php foreach ($avatars as $avatar): ?>
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                        <img class="img-rounded" src="<?=$avatar?>" alt="avatar">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 center-block">
-                                <?=$in = array_shift($ini);?>
-                            </div>
-                        </div>
-                        <?php $id = array_shift($ids); ?>
-                            <a href="https://vk.com/id<?=$id?>" target="_blank">
-                                <button class="btn btn-primary">Добавить</button>
-                            </a>
-                    </div>
-                <?php endforeach; ?>
+        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 main-block">
 
-            <form action="" method="post">
-                <button name="isSelect" type="submit" class="btn btn-primary">Далее</button>
-            </form>
-            <?php if (isset($error)): ?>
-                <p style="color: red"><?=$error?></p>
-            <?php endif; ?>
             </div>
         <?php include __DIR__ . '/layouts/right-bar.php'?>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 two">
@@ -58,7 +38,7 @@
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="/App/templates/js/bootstrap.min.js"></script>
 <script src="//ulogin.ru/js/ulogin.js"></script>
-<script type="text/javascript">
+<script>
 
 </script>
 </body>
