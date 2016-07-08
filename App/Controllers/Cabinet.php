@@ -31,6 +31,8 @@ class Cabinet
                 $person = new Person();
                 if (isset($_SESSION['refer'])) {
                     $person->sponsor_uid = $_SESSION['refer'];
+                } else {
+                    $person->sponsor_uid = 0;
                 }
                 $person->uid = $uid;
                 $person->is_paid = false;
@@ -215,15 +217,29 @@ class Cabinet
                  *
                  */
 
-                
-
                 if (isset($_POST["isSelect"])) {
                     if (isset($_SESSION["one"],$_SESSION["two"], $_SESSION["three"], $_SESSION["four"], $_SESSION["five"])) {
+                        $a = Person::findAllUid();
+                        shuffle($a);
+                        $res = array_shift($a);
+                        var_dump($res);
+
+                        $id = Person::findByIdOnUid($uid);
+                        $isSp = $id->sponsor_uid;
+
+                        var_dump($isSp);
+
                         $person = new Person();
+                        $person->id = $id->id;
                         $person->uid = $uid;
                         $person->is_paid = false;
                         $person->is_add = true;
-                        $person->updatePerson();
+                        if ($isSp !== "0") {
+                        $person->sponsor_uid = $isSp;
+                        } else {
+                            $person->sponsor_uid = $res->uid;
+                        }
+                        $person->save();
                         header('Location: http://site.dev/payment');
                     } else {
                         $this->view->error = 'Пожалуйста добавьте всех пользователей';

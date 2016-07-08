@@ -38,6 +38,16 @@ abstract class Model
         throw new Database('Undefined index');
     }
 
+    public static function findByIdOnUid($uid)
+    {
+        $db = DB::getInstance();
+        $res = $db->query('select * from ' . static::TABLE . ' where uid=:uid', [':uid' => (int)$uid], static::class)[0];
+        if ($res !== null) {
+            return $res;
+        }
+        throw new Database('Undefined index');
+    }
+
     public static function findByUid($uid)
     {
         $db = DB::getInstance();
