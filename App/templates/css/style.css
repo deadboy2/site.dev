@@ -2,8 +2,30 @@ div.block-right {
     box-shadow: 1px 1px 10px 2px gray;
 }
 
-.init {
-    border: 1px gray solid;
+div.wrap-main {
+    min-height: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+div.block-data {
+    background: lightyellow;
+    max-width: 100px;
+    min-height: 40px;
+    word-wrap: break-word;
+
+}
+
+img.img-inside {
+    width: 100px;
+    height: 100px;
+}
+
+div.block-avatars {
+    max-width: 100px;
+    min-height: 20px;
+    overflow: hidden;
 }
 
 div.main-block {

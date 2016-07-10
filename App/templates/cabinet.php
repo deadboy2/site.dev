@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Личный кабинет</title>
-    
+
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/App/templates/css/bootstrap.min.css"/>
     <link rel="stylesheet"  href="/App/templates/css/style.css"/>
+    <link rel="stylesheet"  href="/App/templates/css/media.css"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,34 +23,35 @@
 <body>
 
 <div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 main-block">
-                <?php foreach ($avatars as $avatar): ?>
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                        <img class="img-rounded" src="<?=$avatar?>" alt="avatar">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 center-block">
-                                <?=$in = array_shift($ini);?>
-                            </div>
-                        </div>
-                        <?php $id = array_shift($ids); ?>
-                            <a href="https://vk.com/id<?=$id?>" target="_blank">
-                                <button class="btn btn-primary">Добавить</button>
-                            </a>
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 main-block">
+        <?php foreach ($avatars as $avatar): ?>
+            <div class="col-xs-6 col-sm-2 col-sm-push-1 col-md-2 col-md-push-1 col-lg-2 wrap-main">
+                <div class="row">
+                    <div class="center-block block-avatars">
+                        <img class="img-inside" src="<?=$avatar?>" alt="avatar">
                     </div>
-                <?php endforeach; ?>
-
+                    <div class="center-block block-data">
+                        <span><?=$in = array_shift($ini);?></span>
+                        <?php $id = array_shift($ids); ?>
+                        <a href="https://vk.com/id<?=$id?>" target="_blank">
+                            <button class="btn btn-primary btn-responsive">Добавить</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 text-right">
             <form action="" method="post">
                 <button name="isSelect" type="submit" class="btn btn-primary">Далее</button>
             </form>
             <?php if (isset($error)): ?>
                 <p style="color: red"><?=$error?></p>
             <?php endif; ?>
-            </div>
-        <?php include __DIR__ . '/layouts/right-bar.php'?>
-        <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 two">
-            <p>twoooo</p>
         </div>
+    </div>
+    <?php include __DIR__ . '/layouts/right-bar.php'?>
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 two">
+        <p>twoooo</p>
     </div>
 </div>
 

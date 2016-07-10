@@ -1,0 +1,35 @@
+
+@media (min-width: 900px) and (max-width: 1199px) {
+    img.img-inside {
+        width: 60px;
+        height: 60px;
+    }
+    button.btn-responsive {
+        padding:4px 6px;
+        font-size:90%;
+        line-height: 1;
+        border-radius:3px;
+    }
+}
+
+
+@media (min-width: 100px) and (max-width: 900px) {
+    img.img-inside {
+        width: 60px;
+        height: 60px;
+    }
+    button.btn-responsive {
+        padding:2px 4px;
+        font-size:80%;
+        line-height: 1;
+        border-radius:3px;
+    }
+}
+
+@media (min-width: 100px) and (max-width: 764px) {
+    img.img-inside {
+        width: 100px;
+        height: 100px;
+    }
+
+}

@@ -116,7 +116,7 @@ class Cabinet
 
                 $arr = [];
                 $arrInitials = [];
-                
+
                 foreach ($notBannedPersons as $person) {
                     $arr[] = $person[0]["id"];
                     $arrInitials[] = $person[0]["first_name"] . " " . $person[0]["last_name"];
@@ -235,7 +235,7 @@ class Cabinet
                         $person->is_paid = false;
                         $person->is_add = true;
                         if ($isSp !== "0") {
-                        $person->sponsor_uid = $isSp;
+                            $person->sponsor_uid = $isSp;
                         } else {
                             $person->sponsor_uid = $res->uid;
                         }

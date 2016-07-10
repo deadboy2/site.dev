@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Личный кабинет</title>
-    
+
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/App/templates/css/bootstrap.min.css"/>
@@ -24,8 +24,15 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 main-block">
-
+            <div class="panel-group">
+                <div class="panel panel-info">
+                    <div class="panel-heading">2-й шаг</div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-body">Активация аккаунта</div>
+                </div>
             </div>
+        </div>
         <?php include __DIR__ . '/layouts/right-bar.php'?>
         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 two">
             <p>twoooo</p>
